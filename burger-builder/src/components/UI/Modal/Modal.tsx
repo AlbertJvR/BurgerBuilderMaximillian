@@ -19,4 +19,6 @@ const modal = (props: any) => (
     </Fragment>
 );
 
-export default React.memo(modal, ((prevProps, nextProps) => prevProps.show === nextProps.show));
+export default React.memo(modal, ((prevProps, nextProps) => {
+    return prevProps.show === nextProps.show && prevProps.children === nextProps.children;
+}));
