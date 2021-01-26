@@ -9,10 +9,6 @@ type OrderSummaryProps = {
 }
 
 class OrderSummary extends Component<OrderSummaryProps, any> {
-    /*componentDidUpdate() {
-        console.log('[OrderSummary] rendered');
-    }*/
-
     render() {
         const ingredientSummary = Object.keys(this.props.ingredients)
             .map((igKey: string) => {

@@ -15,16 +15,21 @@ const INGREDIENT_PRICES: Ingredients = {
     bacon: 0.7
 };
 
-class BurgerBuilder extends Component {
+class BurgerBuilder extends Component<any, any> {
     state = {
-        ingredients: {} as Ingredients,
+        ingredients: {
+            salad: 0,
+            meat: 0,
+            bacon: 0,
+            cheese: 0
+        } as Ingredients,
         totalPrice: 4,
         purchaseable: false,
         purchasing: false,
         loading: false
     }
 
-    componentDidMount() {
+    componentWillMount() {
         axios.get('https://react-http-87092.firebaseio.com/ingredients.json')
             .then((response) => {
                 this.setState({ ingredients: response.data });
@@ -84,30 +89,19 @@ class BurgerBuilder extends Component {
     }
 
     purchaseContinueHandler = async () => {
-        this.setState({ loading: true });
-        const order = {
-            ingredients: this.state.ingredients,
-            price: this.state.totalPrice,
-            customer: {
-                name: 'Albert',
-                address: {
-                    street: '123 SomeStreet',
-                    zipCode: '1234',
-                    country: 'South Africa'
-                },
-                email: 'albert@test.com'
-            },
-            deliveryMethod: 'fastest'
-        }
 
-        try {
-            const result: { data: { name: string } } = await axios.post('/orders.json', order);
-            console.log(`CreatedRecordId: ${ result.data.name }`);
-            this.setState({ loading: false, purchasing: false });
-        } catch (e) {
-            console.log('Shit is broken');
-            this.setState({ loading: false, purchasing: false });
+        const queryParams = [];
+
+        for (let i in this.state.ingredients) {
+            queryParams.push(`${encodeURIComponent(i)}=${encodeURIComponent(this.state.ingredients[i as keyof Ingredients])}`);
         }
+        queryParams.push(`price=${this.state.totalPrice}`);
+
+        const queryString = '?' + queryParams.join('&');
+        this.props.history.push({
+            pathname: '/checkout',
+            search: queryString
+        });
     }
 
     render() {
