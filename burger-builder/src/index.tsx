@@ -1,14 +1,15 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { createStore} from 'redux';
-import reducer from './store/reducer';
+import * as appReducer from './store/reducer';
+import { devToolsEnhancer } from 'redux-devtools-extension';
 
-const store = createStore(reducer);
+const store = createStore(appReducer.default, /* preloadedState, */ devToolsEnhancer({}));
 
 ReactDOM.render(
   <React.StrictMode>
